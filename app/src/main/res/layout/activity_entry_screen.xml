@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EntryScreen"
+    android:background="@color/darkScreen"
+    >
+
+
+    <ImageView
+        android:id="@+id/turtle"
+        android:layout_width="740dp"
+        android:layout_height="541dp"
+        android:layout_marginTop="-60dp"
+        android:src="@drawable/turtleangry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.455"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="311dp"
+        android:layout_height="152dp"
+        android:layout_marginTop="-140dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="The tomo app that you needed"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@id/turtle"
+        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/turtle" />
+
+    <Button
+        android:id="@+id/loginRedirectButton"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/blue_button"
+        android:fontFamily="@font/inter_bold"
+        android:text="Sign in with Email"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <Button
+        android:layout_width="159dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/black_button"
+        android:fontFamily="@font/inter_bold"
+        android:text="Google"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/loginRedirectButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/loginRedirectButton"
+        app:layout_constraintTop_toTopOf="@+id/loginRedirectButton" />
+
+    <Button
+        android:layout_width="159dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/black_button"
+        android:fontFamily="@font/inter_bold"
+        android:text="Apple Id"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/loginRedirectButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/loginRedirectButton"
+        app:layout_constraintTop_toTopOf="@+id/loginRedirectButton" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="340dp"
+        android:layout_height="18dp"
+        android:fontFamily="@font/inter_regular"
+        android:text="By Continuing you agree to the Terms and Conditions"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#C1C1C1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginRedirectButton"
+        app:layout_constraintVertical_bias="0.575" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

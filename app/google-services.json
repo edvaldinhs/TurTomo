@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "722411653948",
+    "project_id": "turtomo",
+    "storage_bucket": "turtomo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722411653948:android:7417b27d90486162f5ac39",
+        "android_client_info": {
+          "package_name": "com.example.turtomo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722411653948-14h8oai7jmlkspre5bouap07vk7qfojb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe9K8jknrwl-RNbfv3Io0jJB3gtHSFyCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722411653948-14h8oai7jmlkspre5bouap07vk7qfojb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

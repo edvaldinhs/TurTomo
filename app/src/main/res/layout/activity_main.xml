@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".teste">
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/doggo"
+            android:layout_width="159dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="72dp"
+            android:background="@drawable/black_button"
+            android:fontFamily="@font/inter_bold"
+            android:text="Google"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="@+id/loginRedirectButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/loginRedirectButton"
+            app:layout_constraintTop_toTopOf="@+id/loginRedirectButton" />
+
+    </FrameLayout>
+</RelativeLayout>
