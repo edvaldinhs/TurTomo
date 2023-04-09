@@ -1,9 +1,10 @@
-package com.example.turtomo;
+package com.example.turtomo.RoomFrag;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.turtomo.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -13,7 +14,11 @@ public class Room extends AppCompatActivity {
     int roomNumber;
 
     public Room() {
+    }
 
+    public Room(String id, int roomNumber) {
+        this.id = id;
+        this.roomNumber = roomNumber;
     }
 
     @Override

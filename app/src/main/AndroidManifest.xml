@@ -14,19 +14,19 @@
         android:theme="@style/Theme.TurTomo"
         tools:targetApi="31">
         <activity
-            android:name=".Room"
+            android:name=".RoomFrag.Room"
             android:exported="false" />
         <activity
-            android:name=".HomeScreen"
+            android:name=".HomeScreen.HomeScreen"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".Login.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".BarCodeReader.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".EntryScreen"
+            android:name=".Login.EntryScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CaptureAct"
+            android:name=".BarCodeReader.CaptureAct"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />

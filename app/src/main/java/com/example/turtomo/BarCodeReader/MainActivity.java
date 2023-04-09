@@ -1,22 +1,18 @@
-package com.example.turtomo;
+package com.example.turtomo.BarCodeReader;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-import com.example.turtomo.CaptureAct;
+import com.example.turtomo.Login.EntryScreen;
+import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.ktx.Firebase;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -35,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this,EntryScreen.class);
+                Intent intent = new Intent(MainActivity.this, EntryScreen.class);
                 startActivity(intent);
                 finish();
             }

@@ -1,4 +1,4 @@
-package com.example.turtomo;
+package com.example.turtomo.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,9 @@ import android.view.View;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.example.turtomo.HomeScreen.HomeScreen;
+import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.ktx.Firebase;
 
 public class EntryScreen extends AppCompatActivity {
 

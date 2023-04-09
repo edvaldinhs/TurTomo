@@ -1,4 +1,4 @@
-package com.example.turtomo;
+package com.example.turtomo.HomeScreen;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.turtomo.R;
 import com.example.turtomo.databinding.ActivityHomeScreenBinding;
 import com.google.firebase.auth.FirebaseAuth;
 

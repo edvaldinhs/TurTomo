@@ -1,4 +1,4 @@
-package com.example.turtomo;
+package com.example.turtomo.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,11 +7,12 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.turtomo.HomeScreen.HomeScreen;
+import com.example.turtomo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -60,7 +61,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(Login.this,HomeScreen.class);
+                    Intent intent = new Intent(Login.this, HomeScreen.class);
                     startActivity(intent);
                     finish();
                 }else {

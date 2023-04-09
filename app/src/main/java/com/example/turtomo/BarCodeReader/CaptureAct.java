@@ -1,4 +1,4 @@
-package com.example.turtomo;
+package com.example.turtomo.BarCodeReader;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 
