@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 
+import com.example.turtomo.HomeScreen.RoomFrag.CustomAdapter;
 import com.example.turtomo.R;
-import com.example.turtomo.RoomFrag.Room;
+import com.example.turtomo.HomeScreen.RoomFrag.Room;
 
 import java.util.ArrayList;
 
@@ -28,13 +30,13 @@ public class RoomsFragment extends Fragment {
     private String mParam2;
 
     ArrayList<Room> rooms = new ArrayList<>();
-
+    Button createRoom_btn;
+    ListView listView;
 
     public RoomsFragment() {
         // Required empty public constructor
     }
 
-    Button createRoom_btn;
 
     public static RoomsFragment newInstance(String param1, String param2) {
         RoomsFragment fragment = new RoomsFragment();
@@ -61,11 +63,13 @@ public class RoomsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rooms, container, false);
 
         createRoom_btn = view.findViewById(R.id.createRoom);
+        listView = (ListView)view.findViewById(R.id.listView);
 
         createRoom_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 buildRoomAL();
+                fillListView();
             }
         });
         return view;
@@ -78,5 +82,9 @@ public class RoomsFragment extends Fragment {
         r = new Room(id, roomNumber);
         rooms.add(r);
 
+    }
+    public void fillListView(){
+        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), rooms);
+        listView.setAdapter(myCustomAdapter);
     }
 }
