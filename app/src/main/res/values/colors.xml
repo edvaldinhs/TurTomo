@@ -10,5 +10,9 @@
     <color name="darkScreen">#1A1A1A</color>
     <color name="light_blue">#1E90FF</color>
     <color name="gray">#686868</color>
+    <color name="light_gray">#333333</color>
+    <color name="lighter_gray">#C0C0C0</color>
+
+
 
 </resources>

@@ -3,11 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <Button
         android:id="@+id/tvRoom"
-        android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="sala"/>
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical|top"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_gray_btn_action"
+        android:fontFamily="@font/inter_semibold"
+        android:text="sala"
+        android:paddingRight="10dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:drawableRight="@drawable/ic_rightarrow"
+        android:drawableTint="@color/white"
+        />
 
 </LinearLayout>
