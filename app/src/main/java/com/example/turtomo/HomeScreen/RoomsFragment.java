@@ -77,7 +77,7 @@ public class RoomsFragment extends Fragment {
 
     public void fillRoomValue(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms");
-        Query query = reference.orderByChild("id");
+        Query query = reference.orderByChild("roomId");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -85,7 +85,7 @@ public class RoomsFragment extends Fragment {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    String id = snapshot.child("id").getValue(String.class);
+                    String id = snapshot.child("roomId").getValue(String.class);
                     int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
                     Room r = new Room(id, roomNumber);
                     rooms.add(r);
@@ -96,7 +96,7 @@ public class RoomsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Room organizer Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
             }
         });
     }

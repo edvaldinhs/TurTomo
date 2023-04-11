@@ -4,14 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BarCodeReader.MainActivity">
+    tools:context=".HomeScreen.RoomFrag.ItemAct.MainActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".teste">
+        android:background="@color/darkScreen"
+        android:orientation="vertical"
+        tools:context=".HomeScreen.RoomsFragment">
 
-        <!-- TODO: Update blank fragment layout -->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="181dp">
+
+            <EditText
+                style="@style/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/round_gray_button"
+                android:fontFamily="@font/inter_bold"
+                android:hint="Search"
+                android:padding="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/white"
+                android:textColorHint="@color/lighter_gray"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:fontFamily="@font/inter_semibold"
+                android:text="Items"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ListView
+            android:id="@+id/listViewItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"></ListView>
+
+
+    </LinearLayout>
+
+        <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".teste"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab2"
@@ -22,21 +81,6 @@
             android:layout_marginBottom="16dp"
             app:srcCompat="@android:drawable/ic_menu_camera"
             tools:ignore="SpeakableTextPresentCheck" />
-
-        <Button
-            android:id="@+id/doggo"
-            android:layout_width="159dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="72dp"
-            android:background="@drawable/black_button"
-            android:fontFamily="@font/inter_bold"
-            android:text="Google"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="@+id/loginRedirectButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/loginRedirectButton"
-            app:layout_constraintTop_toTopOf="@+id/loginRedirectButton" />
 
     </FrameLayout>
 </RelativeLayout>

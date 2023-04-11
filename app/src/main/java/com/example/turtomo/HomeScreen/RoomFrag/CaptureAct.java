@@ -1,4 +1,4 @@
-package com.example.turtomo.BarCodeReader;
+package com.example.turtomo.HomeScreen.RoomFrag;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 
