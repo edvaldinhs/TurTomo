@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.turtomo.HomeScreen.RoomFrag.CaptureAct;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }).show();
         }
     });
+
     public void fillListView(){
         CustomAdapterItem myCustomAdapter = new CustomAdapterItem(MainActivity.this, items);
         listView.setAdapter(myCustomAdapter);
@@ -87,16 +91,17 @@ public class MainActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     String itemId = snapshot.child("itemId").getValue(String.class);
                     String itemName = snapshot.child("itemName").getValue(String.class);
-                    Item item = new Item(itemId, itemName);
+                    boolean check = snapshot.child("check").getValue(boolean.class);
+                    Item item = new Item(itemId, itemName, check);
                     items.add(item);
                 }
                 fillListView();
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -11,14 +11,14 @@
         android:layout_gravity="center_vertical|top"
         android:layout_weight="1"
         android:layout_marginTop="10dp"
-        android:background="@drawable/round_gray_button"
+        android:background="@drawable/round_gray_textbox"
         android:fontFamily="@font/inter_semibold"
         android:text="Item"
         android:paddingRight="10dp"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:drawableRight="@drawable/ic_rightarrow"
+        android:drawableRight="@drawable/ic_box"
         android:drawableTint="@color/white"
         />
 

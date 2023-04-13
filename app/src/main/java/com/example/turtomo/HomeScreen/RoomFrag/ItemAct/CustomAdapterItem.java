@@ -1,6 +1,8 @@
 package com.example.turtomo.HomeScreen.RoomFrag.ItemAct;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,13 @@ public class CustomAdapterItem extends BaseAdapter {
         TextView tvItem = (TextView)view.findViewById(R.id.tvItem);
 
         tvItem.setText(tempItem.getItemName());
+
+        if(tempItem.isCheck()){
+            tvItem.setBackgroundResource(R.drawable.round_gray_textbox_check);
+        }else {
+            tvItem.setBackgroundResource(R.drawable.round_gray_textbox);
+        }
+
 
         return view;
     }

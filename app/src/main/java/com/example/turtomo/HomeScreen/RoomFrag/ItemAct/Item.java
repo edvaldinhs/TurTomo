@@ -10,13 +10,15 @@ public class Item {
 
     private String tomoId;
     private String itemName;
+    private boolean check;
 
     public Item() {
     }
 
-    public Item(String tomoId, String itemName) {
+    public Item(String tomoId, String itemName, boolean check) {
         this.tomoId = tomoId;
         this.itemName = itemName;
+        this.check = check;
     }
 
     public String getTomoId() {
@@ -33,6 +35,14 @@ public class Item {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 
     public void save(){
