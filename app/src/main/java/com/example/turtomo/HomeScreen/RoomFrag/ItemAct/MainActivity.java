@@ -27,6 +27,8 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,15 +68,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->
     {
         if (result.getContents() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Resultado");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+            checkItemPresence(result.getContents());
         }
     });
 
@@ -109,4 +103,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void checkItemPresence(String tomo){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
+                .child("room"+roomNumber).child("items");
+        Query query = reference.orderByChild("itemId").equalTo(tomo);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DatabaseReference userRef = snapshot.getRef();
+                    userRef.child("check").setValue(true);
+                    for (Item item : items){
+                        if(item.getTomoId().equals(tomo)){
+                            item.setCheck(true);
+                        }
+                    }
+                }
+                fillListView();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
