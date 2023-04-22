@@ -5,14 +5,161 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeScreen.ProfileFragment"
-    android:background="@color/light_blue">
+    android:background="@color/darkScreen">
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="320dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_gray_button"
+            android:drawableRight="@drawable/ic_rightarrow"
+            android:drawableTint="@color/white"
+            android:fontFamily="@font/inter_semibold"
+            android:paddingLeft="20dp"
+            android:text="Função 1"
+
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginRedirectButton2"
+            app:layout_constraintVertical_bias="0.147" />
+
+        <Button
+            android:id="@+id/buttao"
+            android:layout_width="320dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_gray_button"
+            android:fontFamily="@font/inter_semibold"
+            android:paddingLeft="20dp"
+            android:text="Função 2"
+
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button3"
+            app:layout_constraintVertical_bias="0.18" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="351dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Profile Name"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/emailProfile"
+            android:layout_width="230dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="4px"
+            android:fontFamily="@font/inter_regular"
+            android:text="profile@escolar.ifrn.edu.br"
+            android:textAlignment="center"
+            android:textColor="#C1C1C1"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="100dp"
+            android:layout_height="19dp"
+            android:fontFamily="@font/inter_regular"
+            android:text="Função 1"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="#C1C1C1"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="@+id/button3"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/button3" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="100dp"
+            android:layout_height="19dp"
+            android:fontFamily="@font/inter_regular"
+            android:text="Função 2"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="#C1C1C1"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/buttao"
+            app:layout_constraintEnd_toEndOf="@+id/buttao"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/buttao" />
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="133dp"
+            android:layout_height="37dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Log out"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textColor="#4F4F4F"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttao" />
+
+        <Button
+            android:id="@+id/loginRedirectButton2"
+            android:layout_width="150dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/blue_button"
+            android:fontFamily="@font/inter_bold"
+            android:text="Edit Profile"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailProfile" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView"
+            android:layout_width="110dp"
+            android:layout_height="108dp"
+            android:layout_marginTop="85dp"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

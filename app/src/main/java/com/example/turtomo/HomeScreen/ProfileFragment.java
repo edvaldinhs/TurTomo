@@ -1,6 +1,7 @@
 package com.example.turtomo.HomeScreen;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
@@ -32,7 +34,8 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button btn;
+    private TextView btn;
+    private TextView emailP;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -62,6 +65,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        emailP = view.findViewById(R.id.emailProfile);
+        emailP.setPaintFlags(emailP.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         btn = view.findViewById(R.id.logout);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
