@@ -50,12 +50,13 @@
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <Button
+        android:id="@+id/googleSignIn"
         android:layout_width="159dp"
         android:layout_height="52dp"
         android:layout_marginTop="72dp"
-        android:background="@drawable/black_button"
         android:fontFamily="@font/inter_bold"
         android:text="Google"
+        android:background="@drawable/black_button"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="@+id/loginRedirectButton"

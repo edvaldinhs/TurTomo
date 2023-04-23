@@ -9,12 +9,12 @@
 
     <ImageView
         android:id="@+id/turtlepower"
-        android:layout_width="457dp"
-        android:layout_height="210dp"
-        android:layout_marginRight="70dp"
-        android:src="@drawable/turtlepower"
+        android:layout_width="235dp"
+        android:layout_height="195dp"
+        android:layout_marginRight="100dp"
+        android:src="@drawable/turtomoturtle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,13 +22,14 @@
         android:id="@+id/textView"
         android:layout_width="206dp"
         android:layout_height="122dp"
-        android:fontFamily="@font/inter_bold"
         android:layout_marginTop="60dp"
-        android:layout_marginRight="-60dp"
+        android:fontFamily="@font/inter_bold"
         android:text="LOGIN"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
-        app:layout_constraintEnd_toEndOf="@+id/turtlepower"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintStart_toEndOf="@+id/turtlepower"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -85,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/googleSignIn2"
         android:layout_width="126dp"
         android:layout_height="47dp"
         android:layout_marginTop="176dp"
@@ -102,7 +103,7 @@
         app:layout_constraintVertical_bias="0.223" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/AppleId"
         android:layout_width="126dp"
         android:layout_height="47dp"
         android:background="@drawable/black_button"
@@ -114,7 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/googleSignIn2"
         app:layout_constraintVertical_bias="0.17" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
