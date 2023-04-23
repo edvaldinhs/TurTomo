@@ -5,6 +5,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:colorPrimary">@color/light_blue</item>
     </style>
+    <style name="custom_googleSignInButton">
+        <item name="android:background">@drawable/black_button</item>
+    </style>
     <style name="edit_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
