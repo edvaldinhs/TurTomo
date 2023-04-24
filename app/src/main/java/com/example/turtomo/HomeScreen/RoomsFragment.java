@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,6 +36,8 @@ public class RoomsFragment extends Fragment {
 
     ArrayList<Room> rooms = new ArrayList<>();
     ListView listView;
+    private EditText searchEditText;
+    private Button search;
 
     public RoomsFragment() {
         // Required empty public constructor
@@ -65,8 +69,21 @@ public class RoomsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rooms, container, false);
 
         listView = (ListView)view.findViewById(R.id.listView);
+        searchEditText = view.findViewById(R.id.searchEditTextRoom);
+        search = view.findViewById(R.id.search);
 
-        fillRoomValue();
+        String searchResults = searchEditText.getText().toString();
+
+        fillRoomValue(searchResults);
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchResults = searchEditText.getText().toString();
+                rooms.clear();
+                fillRoomValue(searchResults);
+            }
+        });
         return view;
     }
 
@@ -75,7 +92,7 @@ public class RoomsFragment extends Fragment {
         listView.setAdapter(myCustomAdapter);
     }
 
-    public void fillRoomValue(){
+    public void fillRoomValue(String searchResults){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms");
         Query query = reference.orderByChild("roomId");
 
@@ -85,10 +102,21 @@ public class RoomsFragment extends Fragment {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    String id = snapshot.child("roomId").getValue(String.class);
-                    int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
-                    Room r = new Room(id, roomNumber);
-                    rooms.add(r);
+                    if(searchResults.isEmpty()){
+                        String id = snapshot.child("roomId").getValue(String.class);
+                        int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
+                        Room r = new Room(id, roomNumber);
+                        rooms.add(r);
+                    }else{
+                        if(snapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
+                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())){
+                            String id = snapshot.child("roomId").getValue(String.class);
+                            int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
+                            Room r = new Room(id, roomNumber);
+                            rooms.add(r);
+                        }
+                    }
+
                 }
 
                 fillListView();

@@ -7,15 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.turtomo.HomeScreen.RoomFrag.CaptureAct;
-import com.example.turtomo.HomeScreen.RoomFrag.ItemAct.CustomAdapterItem;
 import com.example.turtomo.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,14 +26,15 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     Bundle extras;
     int roomNumber;
+    private EditText searchEditText;
 
+    private Button reset;
+    private Button search;
 
     ArrayList<Item> items = new ArrayList<>();
     ListView listView;
@@ -50,10 +50,43 @@ public class MainActivity extends AppCompatActivity {
         roomNumber = extras.getInt("roomNumber");
 
         listView = (ListView)findViewById(R.id.listViewItem);
+        reset = findViewById(R.id.reset);
 
-        fillItemValue();
+        searchEditText = (EditText) findViewById(R.id.searchEditTextItem);
+        String searchResults = searchEditText.getText().toString();
+        search = findViewById(R.id.search3);
+
+        fillItemValue(searchResults);
         findViewById(R.id.fab2).setOnClickListener(view -> {
             scanCode();
+        });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchResults = searchEditText.getText().toString();
+                items.clear();
+                fillItemValue(searchResults);
+            }
+        });
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("ATENÇÃO");
+                builder.setMessage("Confirmar irá resetar o estado de presença de TODOS os itens. Continuar?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        cancelItemPresence();
+                    }
+                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();;
+            }
         });
 
     }
@@ -77,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myCustomAdapter);
     }
 
-    public void fillItemValue(){
+    public void fillItemValue(String searchResults){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
                 .child("room"+roomNumber).child("items");
         Query query = reference.orderByChild("itemId");
@@ -86,16 +119,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                    String itemId = snapshot.child("itemId").getValue(String.class);
-                    String itemName = snapshot.child("itemName").getValue(String.class);
-                    boolean check = snapshot.child("check").getValue(boolean.class);
-                    Item item = new Item(itemId, itemName, check);
-                    items.add(item);
+                    if(searchResults.isEmpty()){
+                        String itemId = snapshot.child("itemId").getValue(String.class);
+                        String itemName = snapshot.child("itemName").getValue(String.class);
+                        boolean check = snapshot.child("check").getValue(boolean.class);
+                        Item item = new Item(itemId, itemName, check);
+                        items.add(item);
+                    }else{
+                        if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
+                            String itemId = snapshot.child("itemId").getValue(String.class);
+                            String itemName = snapshot.child("itemName").getValue(String.class);
+                            boolean check = snapshot.child("check").getValue(boolean.class);
+                            Item item = new Item(itemId, itemName, check);
+                            items.add(item);
+                        }
+                    }
                 }
                 fillListView();
             }
 
+            public void search(){
+
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -119,6 +164,29 @@ public class MainActivity extends AppCompatActivity {
                         if(item.getTomoId().equals(tomo)){
                             item.setCheck(true);
                         }
+                    }
+                }
+                fillListView();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void cancelItemPresence(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
+                .child("room"+roomNumber).child("items");
+        Query query = reference.orderByChild("itemId");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DatabaseReference userRef = snapshot.getRef();
+                    userRef.child("check").setValue(false);
+                    for (Item item : items){
+                            item.setCheck(false);
                     }
                 }
                 fillListView();

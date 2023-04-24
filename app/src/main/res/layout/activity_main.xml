@@ -18,7 +18,37 @@
             android:layout_width="match_parent"
             android:layout_height="181dp">
 
+            <Button
+                android:id="@+id/search3"
+                android:layout_width="38dp"
+                android:layout_height="19dp"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/search_button"
+                android:drawableTop="@drawable/ic_search"
+                android:drawableTint="@color/white"
+                android:text="Button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="72dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/blue_button"
+                android:fontFamily="@font/inter_semibold"
+                android:text="Reset"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/searchEditTextItem"
+                app:layout_constraintTop_toBottomOf="@+id/searchEditTextItem" />
+
             <EditText
+                android:id="@+id/searchEditTextItem"
                 style="@style/edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
