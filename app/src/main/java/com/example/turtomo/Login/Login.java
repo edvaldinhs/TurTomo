@@ -2,11 +2,14 @@ package com.example.turtomo.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +45,8 @@ public class Login extends AppCompatActivity {
 
     private EditText emailLogin,passwordLogin;
     private Button bt_login;
+    private Button passShow;
+    private boolean passidk;
     String[] mensagens = {"Fill in all fields", "Incorrect email or password"};
 
     public Login() {
@@ -55,6 +60,26 @@ public class Login extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         IniciarComponentes();
+
+        passShow = findViewById(R.id.passShow);
+        passidk = true;
+        passShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(passidk){
+                    passwordLogin.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+                    passidk = false;
+                }else{
+                    System.out.println("asdasrKJAESUYDGASYGEASE");
+                    passwordLogin.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    passidk = true;
+                }
+                Typeface customFont = ResourcesCompat.getFont(Login.this, R.font.inter_bold);
+                passwordLogin.setTypeface(customFont);
+            }
+        });
+
+
 
         bt_login.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -71,6 +71,17 @@
         app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
 
     <Button
+        android:id="@+id/passShow"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginRight="7dp"
+        android:text=" "
+        android:background="@drawable/invisible_button"
+        app:layout_constraintBottom_toBottomOf="@+id/passwordLogin"
+        app:layout_constraintEnd_toEndOf="@+id/passwordLogin"
+        app:layout_constraintTop_toTopOf="@+id/passwordLogin" />
+
+    <Button
         android:id="@+id/bt_login"
         android:layout_width="159dp"
         android:layout_height="52dp"
