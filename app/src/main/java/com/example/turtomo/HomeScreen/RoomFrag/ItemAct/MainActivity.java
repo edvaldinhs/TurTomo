@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     Bundle extras;
     int roomNumber;
+    int blockNumber;
     private EditText searchEditText;
 
     private Button reset;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         extras = getIntent().getExtras();
         roomNumber = extras.getInt("roomNumber");
+        blockNumber = Integer.parseInt(extras.getString("blockId"));
 
         listView = (ListView)findViewById(R.id.listViewItem);
         reset = findViewById(R.id.reset);
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         String searchResults = searchEditText.getText().toString();
         search = findViewById(R.id.search3);
 
-        fillItemValue(searchResults);
+        fillItemValue(searchResults, blockNumber);
         findViewById(R.id.fab2).setOnClickListener(view -> {
             scanCode();
         });
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String searchResults = searchEditText.getText().toString();
                 items.clear();
-                fillItemValue(searchResults);
+                fillItemValue(searchResults, blockNumber);
             }
         });
         reset.setOnClickListener(new View.OnClickListener() {
@@ -110,44 +112,83 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myCustomAdapter);
     }
 
-    public void fillItemValue(String searchResults){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
-                .child("room"+roomNumber).child("items");
-        Query query = reference.orderByChild("itemId");
+//    public void fillItemValue(String searchResults){
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
+//                .child("room"+roomNumber).child("items");
+//        Query query = reference.orderByChild("itemId");
+//
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    if(searchResults.isEmpty()){
+//                        String itemId = snapshot.child("itemId").getValue(String.class);
+//                        String itemName = snapshot.child("itemName").getValue(String.class);
+//                        boolean check = snapshot.child("check").getValue(boolean.class);
+//                        Item item = new Item(itemId, itemName, check);
+//                        items.add(item);
+//                    }else{
+//                        if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
+//                            String itemId = snapshot.child("itemId").getValue(String.class);
+//                            String itemName = snapshot.child("itemName").getValue(String.class);
+//                            boolean check = snapshot.child("check").getValue(boolean.class);
+//                            Item item = new Item(itemId, itemName, check);
+//                            items.add(item);
+//                        }
+//                    }
+//                }
+//                fillListView();
+//            }
+//
+//            public void search(){
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+public void fillItemValue(String searchResults, int blockNumber){
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks")
+            .child("block" + blockNumber).child("room" + roomNumber).child("items");
+    Query query = reference.orderByChild("itemId");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(searchResults.isEmpty()){
+    query.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                if(searchResults.isEmpty()){
+                    String itemId = snapshot.child("itemId").getValue(String.class);
+                    String itemName = snapshot.child("itemName").getValue(String.class);
+                    boolean check = snapshot.child("check").getValue(boolean.class);
+                    Item item = new Item(itemId, itemName, check);
+                    items.add(item);
+                }else{
+                    if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
                         String itemId = snapshot.child("itemId").getValue(String.class);
                         String itemName = snapshot.child("itemName").getValue(String.class);
                         boolean check = snapshot.child("check").getValue(boolean.class);
                         Item item = new Item(itemId, itemName, check);
                         items.add(item);
-                    }else{
-                        if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
-                            String itemId = snapshot.child("itemId").getValue(String.class);
-                            String itemName = snapshot.child("itemName").getValue(String.class);
-                            boolean check = snapshot.child("check").getValue(boolean.class);
-                            Item item = new Item(itemId, itemName, check);
-                            items.add(item);
-                        }
                     }
                 }
-                fillListView();
             }
+            fillListView();
+        }
 
-            public void search(){
+        public void search(){
 
-            }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+        }
+    });
+}
+
 
     public void checkItemPresence(String tomo){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")

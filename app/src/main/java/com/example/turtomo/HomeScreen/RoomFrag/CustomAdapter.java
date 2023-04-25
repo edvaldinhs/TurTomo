@@ -54,6 +54,7 @@ public class CustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MainActivity.class);
+                intent.putExtra("blockId", tempRoom.getBlockId());
                 intent.putExtra("id", tempRoom.getId());
                 intent.putExtra("roomNumber", tempRoom.getRoomNumber());
                 mContext.startActivity(intent);

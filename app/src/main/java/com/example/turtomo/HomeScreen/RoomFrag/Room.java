@@ -12,13 +12,15 @@ public class Room {
 
     String id;
     int roomNumber;
+    String blockId;
 
     public Room() {
     }
 
-    public Room(String id, int roomNumber) {
+    public Room(String id, int roomNumber, String blockId) {
         this.id = id;
         this.roomNumber = roomNumber;
+        this.blockId = blockId;
     }
 
 
@@ -36,6 +38,14 @@ public class Room {
 
     public void setRoomNumber(int roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public String getBlockId() {
+        return blockId;
+    }
+
+    public void setBlockId(String blockId) {
+        this.blockId = blockId;
     }
 
     public void save(){
