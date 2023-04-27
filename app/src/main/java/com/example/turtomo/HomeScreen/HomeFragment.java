@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
-        fillBlockValue("");
+        fillBlockValue();
 
         return view;
     }
@@ -102,21 +102,20 @@ public class HomeFragment extends Fragment {
         listView.setAdapter(myCustomAdapter);
     }
 
-    public void fillBlockValue(String searchResults){
+    public void fillBlockValue(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
         Query query = reference.orderByChild("blockId");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                blocks.clear();
 
                 for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
-                            if (searchResults.isEmpty()) {
                                 String blockId = blockSnapshot.child("blockId").getValue(String.class);
                                 String blockName = blockSnapshot.child("blockName").getValue(String.class);
                                 Block b = new Block(blockId, blockName);
                                 blocks.add(b);
-                    }
                 }
 
                 fillListView();
