@@ -10,9 +10,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Room {
 
-    String id;
-    int roomNumber;
-    String blockId;
+    private String id;
+    private int roomNumber;
+    private String blockId;
 
     public Room() {
     }

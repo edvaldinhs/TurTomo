@@ -92,75 +92,39 @@ public class RoomsFragment extends Fragment {
         listView.setAdapter(myCustomAdapter);
     }
 
-//    public void fillRoomValue(String searchResults){
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms");
-//        Query query = reference.orderByChild("roomId");
-//
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//
-//                    if(searchResults.isEmpty()){
-//                        String id = snapshot.child("roomId").getValue(String.class);
-//                        int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
-//                        Room r = new Room(id, roomNumber);
-//                        rooms.add(r);
-//                    }else{
-//                        if(snapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-//                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())){
-//                            String id = snapshot.child("roomId").getValue(String.class);
-//                            int roomNumber = snapshot.child("roomNumber").getValue(Integer.class);
-//                            Room r = new Room(id, roomNumber);
-//                            rooms.add(r);
-//                        }
-//                    }
-//
-//                }
-//
-//                fillListView();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-public void fillRoomValue(String searchResults){
-    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
-    Query query = reference.orderByChild("blockId");
+    public void fillRoomValue(String searchResults){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
+        Query query = reference.orderByChild("blockId");
 
-    query.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
-                String blockId = blockSnapshot.child("blockId").getValue().toString();
-                for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-                    if (roomSnapshot.getKey().startsWith("room")) {
-                        if (searchResults.isEmpty() ||
-                                roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-                                || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
-                            String id = roomSnapshot.child("roomId").getValue(String.class);
-                            int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
-                            Room r = new Room(id, roomNumber, blockId);
-                            rooms.add(r);
+                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                    String blockId = blockSnapshot.child("blockId").getValue().toString();
+                    for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
+                        if (roomSnapshot.getKey().startsWith("room")) {
+                            if (searchResults.isEmpty() ||
+                                    roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
+                                    || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+                                String id = roomSnapshot.child("roomId").getValue(String.class);
+                                int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                                Room r = new Room(id, roomNumber, blockId);
+                                rooms.add(r);
+                            }
                         }
                     }
                 }
+
+                fillListView();
             }
 
-            fillListView();
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
-        }
-    });
-}
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 

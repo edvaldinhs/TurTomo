@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/tvBlock"
+        android:layout_width="152dp"
+        android:layout_height="138dp"
+        android:layout_gravity="center_vertical|top"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_gray_btn_action"
+        android:drawableRight="@drawable/ic_rightarrow"
+        android:drawableTint="@color/white"
+        android:fontFamily="@font/inter_semibold"
+        android:paddingRight="10dp"
+        android:text="sala"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</LinearLayout>

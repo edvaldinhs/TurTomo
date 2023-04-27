@@ -3,18 +3,30 @@ package com.example.turtomo.HomeScreen;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.example.turtomo.HomeScreen.HomeFrag.Block;
+import com.example.turtomo.HomeScreen.HomeFrag.CustomAdapter;
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
@@ -28,6 +40,9 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
+
+    ArrayList<Block> blocks = new ArrayList<>();
+    ListView listView;
 
     private TextView helloMessage;
     private FirebaseAuth firebaseAuth;
@@ -56,13 +71,17 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        listView = (ListView)view.findViewById(R.id.listViewBlock);
         helloMessage = view.findViewById(R.id.helloMessage);
 
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
+        fillBlockValue("");
+
         return view;
     }
+
     private void checkUser() {
         //verifica se está realmente logado
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -78,4 +97,35 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public void fillListView(){
+        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), blocks);
+        listView.setAdapter(myCustomAdapter);
+    }
+
+    public void fillBlockValue(String searchResults){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
+        Query query = reference.orderByChild("blockId");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                            if (searchResults.isEmpty()) {
+                                String blockId = blockSnapshot.child("blockId").getValue(String.class);
+                                String blockName = blockSnapshot.child("blockName").getValue(String.class);
+                                Block b = new Block(blockId, blockName);
+                                blocks.add(b);
+                    }
+                }
+
+                fillListView();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity().getApplicationContext(), "Block Database organizer Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
