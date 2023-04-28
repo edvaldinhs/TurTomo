@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.turtomo.HomeScreen.HomeFrag.Block;
 import com.example.turtomo.HomeScreen.RoomFrag.CustomAdapter;
+import com.example.turtomo.HomeScreen.RoomFrag.ItemSpacingDecoration;
+import com.example.turtomo.HomeScreen.RoomFrag.SearchBlockCustomAdapter;
 import com.example.turtomo.R;
 import com.example.turtomo.HomeScreen.RoomFrag.Room;
 import com.google.firebase.database.DataSnapshot;
@@ -35,9 +40,13 @@ public class RoomsFragment extends Fragment {
     private String mParam2;
 
     ArrayList<Room> rooms = new ArrayList<>();
+    ArrayList<Block> block_searchs = new ArrayList<>();
+
     ListView listView;
+    RecyclerView searchRecyclerView;
     private EditText searchEditText;
     private Button search;
+    private String searchByBlockId;
 
     public RoomsFragment() {
         // Required empty public constructor
@@ -69,19 +78,29 @@ public class RoomsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rooms, container, false);
 
         listView = (ListView)view.findViewById(R.id.listView);
+
+        searchRecyclerView = view.findViewById(R.id.searchListView);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        int spacing = getResources().getDimensionPixelSize(R.dimen.item_spacing);
+        ItemSpacingDecoration itemSpacingDecoration = new ItemSpacingDecoration(spacing);
+        searchRecyclerView.addItemDecoration(itemSpacingDecoration);
+
         searchEditText = view.findViewById(R.id.searchEditTextRoom);
         search = view.findViewById(R.id.search);
 
         String searchResults = searchEditText.getText().toString();
 
-        fillRoomValue(searchResults);
+        fillBlockValue();
+        fillRoomValue(searchResults, searchByBlockId);
+
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String searchResults = searchEditText.getText().toString();
                 rooms.clear();
-                fillRoomValue(searchResults);
+                fillRoomValue(searchResults, searchByBlockId);
             }
         });
         return view;
@@ -92,7 +111,7 @@ public class RoomsFragment extends Fragment {
         listView.setAdapter(myCustomAdapter);
     }
 
-    public void fillRoomValue(String searchResults){
+    public void fillRoomValue(String searchResults, String searchByBlockId){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
         Query query = reference.orderByChild("blockId");
 
@@ -103,20 +122,58 @@ public class RoomsFragment extends Fragment {
                 for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
                     String blockId = blockSnapshot.child("blockId").getValue().toString();
                     for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-                        if (roomSnapshot.getKey().startsWith("room")) {
-                            if (searchResults.isEmpty() ||
-                                    roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-                                    || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
-                                String id = roomSnapshot.child("roomId").getValue(String.class);
-                                int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
-                                Room r = new Room(id, roomNumber, blockId);
-                                rooms.add(r);
+
+                        if (searchResults.isEmpty() ||
+                                roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
+                                || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+                            //Verify the rooms by the searchBar
+                            if (roomSnapshot.getKey().startsWith("room")) {
+                                if (searchResults.isEmpty() ||
+                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
+                                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+                                    String id = roomSnapshot.child("roomId").getValue(String.class);
+                                    int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                                    Room r = new Room(id, roomNumber, blockId);
+                                    rooms.add(r);
+                                }
                             }
                         }
+
                     }
                 }
 
                 fillListView();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void fillSearchListView(){
+        SearchBlockCustomAdapter myCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs);
+        searchRecyclerView.setAdapter(myCustomAdapter);
+    }
+
+    public void fillBlockValue(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
+        Query query = reference.orderByChild("blockId");
+
+        block_searchs.add(new Block("","All"));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                    String blockId = blockSnapshot.child("blockId").getValue().toString();
+                    String blockName = blockSnapshot.child("blockName").getValue(String.class);
+                    Block b = new Block(blockId, blockName);
+                    block_searchs.add(b);
+                }
+
+                fillSearchListView();
             }
 
             @Override
