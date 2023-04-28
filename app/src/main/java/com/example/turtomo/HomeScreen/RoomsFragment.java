@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.turtomo.HomeScreen.HomeFrag.Block;
+import com.example.turtomo.HomeScreen.RoomFrag.BlockSearch;
 import com.example.turtomo.HomeScreen.RoomFrag.CustomAdapter;
+import com.example.turtomo.HomeScreen.RoomFrag.ItemAct.Item;
 import com.example.turtomo.HomeScreen.RoomFrag.ItemSpacingDecoration;
 import com.example.turtomo.HomeScreen.RoomFrag.SearchBlockCustomAdapter;
 import com.example.turtomo.R;
@@ -40,13 +42,14 @@ public class RoomsFragment extends Fragment {
     private String mParam2;
 
     ArrayList<Room> rooms = new ArrayList<>();
-    ArrayList<Block> block_searchs = new ArrayList<>();
+    ArrayList<BlockSearch> block_searchs = new ArrayList<>();
 
     ListView listView;
     RecyclerView searchRecyclerView;
     private EditText searchEditText;
     private Button search;
     private String searchByBlockId;
+    private SearchBlockCustomAdapter mySearchCustomAdapter;
 
     public RoomsFragment() {
         // Required empty public constructor
@@ -94,7 +97,6 @@ public class RoomsFragment extends Fragment {
         fillBlockValue();
         fillRoomValue(searchResults, searchByBlockId);
 
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,6 +105,8 @@ public class RoomsFragment extends Fragment {
                 fillRoomValue(searchResults, searchByBlockId);
             }
         });
+
+
         return view;
     }
 
@@ -152,15 +156,15 @@ public class RoomsFragment extends Fragment {
         });
     }
     public void fillSearchListView(){
-        SearchBlockCustomAdapter myCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs);
-        searchRecyclerView.setAdapter(myCustomAdapter);
+        SearchBlockCustomAdapter mySearchCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs);
+        searchRecyclerView.setAdapter(mySearchCustomAdapter);
     }
 
     public void fillBlockValue(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
         Query query = reference.orderByChild("blockId");
 
-        block_searchs.add(new Block("","All"));
+        block_searchs.add(new BlockSearch("","All", true));
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -169,7 +173,7 @@ public class RoomsFragment extends Fragment {
                 for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
                     String blockId = blockSnapshot.child("blockId").getValue().toString();
                     String blockName = blockSnapshot.child("blockName").getValue(String.class);
-                    Block b = new Block(blockId, blockName);
+                    BlockSearch b = new BlockSearch(blockId, blockName, false);
                     block_searchs.add(b);
                 }
 
@@ -182,7 +186,4 @@ public class RoomsFragment extends Fragment {
             }
         });
     }
-
-
-
 }

@@ -112,44 +112,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myCustomAdapter);
     }
 
-//    public void fillItemValue(String searchResults){
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("rooms")
-//                .child("room"+roomNumber).child("items");
-//        Query query = reference.orderByChild("itemId");
-//
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    if(searchResults.isEmpty()){
-//                        String itemId = snapshot.child("itemId").getValue(String.class);
-//                        String itemName = snapshot.child("itemName").getValue(String.class);
-//                        boolean check = snapshot.child("check").getValue(boolean.class);
-//                        Item item = new Item(itemId, itemName, check);
-//                        items.add(item);
-//                    }else{
-//                        if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
-//                            String itemId = snapshot.child("itemId").getValue(String.class);
-//                            String itemName = snapshot.child("itemName").getValue(String.class);
-//                            boolean check = snapshot.child("check").getValue(boolean.class);
-//                            Item item = new Item(itemId, itemName, check);
-//                            items.add(item);
-//                        }
-//                    }
-//                }
-//                fillListView();
-//            }
-//
-//            public void search(){
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 public void fillItemValue(String searchResults, int blockNumber){
     DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks")
             .child("block" + blockNumber).child("room" + roomNumber).child("items");

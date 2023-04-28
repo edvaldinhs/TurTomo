@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical|top"
         android:layout_marginTop="10dp"
-        android:background="@drawable/blue_button"
+        android:background="@drawable/invisible_button"
         android:fontFamily="@font/inter_semibold"
         android:text="Bloco"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
