@@ -1,16 +1,13 @@
 package com.example.turtomo.HomeScreen.RoomFrag;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.turtomo.HomeScreen.HomeFrag.Block;
-import com.example.turtomo.HomeScreen.RoomsFragment;
 import com.example.turtomo.R;
 
 import java.util.ArrayList;
@@ -21,17 +18,24 @@ public class SearchBlockCustomAdapter extends RecyclerView.Adapter<SearchBlockCu
 
     private Context mContext;
     private ArrayList<BlockSearch> blocks = new ArrayList<>();
+    private OnBlockClickListener blockClickListener;
 
-    public SearchBlockCustomAdapter(Context context, ArrayList<BlockSearch> blocks){
+
+    public SearchBlockCustomAdapter(Context context, ArrayList<BlockSearch> blocks, OnBlockClickListener listener) {
         mContext = context;
         this.blocks = blocks;
+        this.blockClickListener = listener;
+    }
+
+    public interface OnBlockClickListener {
+        void onBlockClick(String blockId);
     }
 
     @Nonnull
     @Override
     public ViewHolder onCreateViewHolder(@Nonnull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.listview_searchbyblock, parent, false);
-        return new ViewHolder(view, blocks);
+        return new ViewHolder(view, blocks, blockClickListener);
     }
 
     @Override
@@ -54,11 +58,12 @@ public class SearchBlockCustomAdapter extends RecyclerView.Adapter<SearchBlockCu
         public Button tvSearchBlock;
         private BlockSearch block;
         private ArrayList<BlockSearch> blocks;
+        private OnBlockClickListener blockClickListener;
 
-
-        public ViewHolder(View itemView, ArrayList<BlockSearch> blocks) {
+        public ViewHolder(View itemView, ArrayList<BlockSearch> blocks, OnBlockClickListener blockClickListener) {
             super(itemView);
             this.blocks = blocks;
+            this.blockClickListener = blockClickListener;
             tvSearchBlock = itemView.findViewById(R.id.tvSearchBlock);
             tvSearchBlock.setOnClickListener(this);
         }
@@ -68,12 +73,9 @@ public class SearchBlockCustomAdapter extends RecyclerView.Adapter<SearchBlockCu
             if(!block.getBlockName().isEmpty()){
                 tvSearchBlock.setText(block.getBlockName());
             }
-            if (block.isSelected()) {
-                tvSearchBlock.setBackgroundResource(R.drawable.blue_button);
-            } else {
-                tvSearchBlock.setBackgroundResource(R.drawable.invisible_button);
-            }
+            colorBind(block);
         }
+
         public void colorBind(BlockSearch block){
             this.block = block;
             if (block.isSelected()) {
@@ -96,6 +98,7 @@ public class SearchBlockCustomAdapter extends RecyclerView.Adapter<SearchBlockCu
                     block.setSelected(true);
                     notifyDataSetChanged();
                     tvSearchBlock.setBackgroundResource(R.drawable.blue_button);
+                    blockClickListener.onBlockClick(block.getBlockId());
                     break;
                 default:
                     break;
@@ -103,4 +106,5 @@ public class SearchBlockCustomAdapter extends RecyclerView.Adapter<SearchBlockCu
         }
     }
 }
+
 

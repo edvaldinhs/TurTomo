@@ -15,8 +15,9 @@
         android:drawableTint="@color/white"
         android:fontFamily="@font/inter_semibold"
         android:paddingRight="10dp"
-        android:text="sala"
+        android:text="Bloco"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

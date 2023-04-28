@@ -15,10 +15,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.turtomo.HomeScreen.HomeFrag.Block;
 import com.example.turtomo.HomeScreen.RoomFrag.BlockSearch;
 import com.example.turtomo.HomeScreen.RoomFrag.CustomAdapter;
-import com.example.turtomo.HomeScreen.RoomFrag.ItemAct.Item;
 import com.example.turtomo.HomeScreen.RoomFrag.ItemSpacingDecoration;
 import com.example.turtomo.HomeScreen.RoomFrag.SearchBlockCustomAdapter;
 import com.example.turtomo.R;
@@ -32,8 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
 
-public class RoomsFragment extends Fragment {
+
+public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.OnBlockClickListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -48,11 +48,29 @@ public class RoomsFragment extends Fragment {
     RecyclerView searchRecyclerView;
     private EditText searchEditText;
     private Button search;
-    private String searchByBlockId;
+    private String searchByBlockId = "";
     private SearchBlockCustomAdapter mySearchCustomAdapter;
 
     public RoomsFragment() {
         // Required empty public constructor
+    }
+
+    @Nonnull
+    @Override
+    public void onBlockClick(String blockId) {
+        // Handle the block click event here
+        // You can use the blockId parameter to perform any action you need
+//        Toast.makeText(getActivity(), "Block " + blockId + " clicked", Toast.LENGTH_SHORT).show();
+
+        // Update the searchByBlockId variable
+        searchByBlockId = blockId;
+
+        // Reload the room data based on the selected block
+        String searchResults = searchEditText.getText().toString();
+        rooms.clear();
+        if(searchByBlockId!=null){
+            fillRoomValue(searchResults, searchByBlockId);
+        }
     }
 
 
@@ -125,27 +143,33 @@ public class RoomsFragment extends Fragment {
 
                 for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
                     String blockId = blockSnapshot.child("blockId").getValue().toString();
+                    if (searchByBlockId.isEmpty() ||
+                            blockSnapshot.child("blockId").getValue(String.class).toLowerCase().contains(searchByBlockId.toLowerCase())) {
                     for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-
                         if (searchResults.isEmpty() ||
                                 roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
                                 || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+
                             //Verify the rooms by the searchBar
                             if (roomSnapshot.getKey().startsWith("room")) {
+
+
                                 if (searchResults.isEmpty() ||
-                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-                                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().
+                                                toLowerCase().contains(searchResults.toLowerCase())) {
+
                                     String id = roomSnapshot.child("roomId").getValue(String.class);
                                     int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
                                     Room r = new Room(id, roomNumber, blockId);
                                     rooms.add(r);
+
                                 }
                             }
                         }
+                    }
 
                     }
                 }
-
                 fillListView();
             }
 
@@ -155,8 +179,8 @@ public class RoomsFragment extends Fragment {
             }
         });
     }
-    public void fillSearchListView(){
-        SearchBlockCustomAdapter mySearchCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs);
+    private void fillSearchListView(){
+        SearchBlockCustomAdapter mySearchCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs, this);
         searchRecyclerView.setAdapter(mySearchCustomAdapter);
     }
 
