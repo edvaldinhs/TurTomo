@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<BlockSearch> block_searchs = new ArrayList<>();
 
+    Bundle extras;
     ListView listView;
     RecyclerView searchRecyclerView;
     private EditText searchEditText;
@@ -64,7 +66,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
         // Update the searchByBlockId variable
         searchByBlockId = blockId;
-
         // Reload the room data based on the selected block
         String searchResults = searchEditText.getText().toString();
         rooms.clear();
@@ -100,6 +101,13 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
         listView = (ListView)view.findViewById(R.id.listView);
 
+        extras = getArguments();
+        boolean isFromPHome = false;
+        if(extras!=null){
+            searchByBlockId = extras.getString("blockId");
+            isFromPHome = true;
+        }
+
         searchRecyclerView = view.findViewById(R.id.searchListView);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -112,8 +120,9 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
         String searchResults = searchEditText.getText().toString();
 
-        fillBlockValue();
+        fillBlockValue(isFromPHome, searchByBlockId);
         fillRoomValue(searchResults, searchByBlockId);
+
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +135,19 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
 
         return view;
+    }
+    public void setCheck(String blockId){
+        if(!blockId.isEmpty() || !block_searchs.isEmpty()){
+            for (BlockSearch b : block_searchs){
+                Log.d("IsSelected",b.getBlockName()+"  "+blockId);
+                if(b.getBlockId().toLowerCase().equals(blockId)){
+                    b.setSelected(true);
+                }else {
+                    b.setSelected(false);
+                }
+            }
+            fillSearchListView();
+        }
     }
 
     public void fillListView(){
@@ -184,7 +206,7 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
         searchRecyclerView.setAdapter(mySearchCustomAdapter);
     }
 
-    public void fillBlockValue(){
+    public void fillBlockValue(boolean isFromPHome, String blockIde){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
         Query query = reference.orderByChild("blockId");
 
@@ -202,6 +224,9 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
                 }
 
                 fillSearchListView();
+                if(isFromPHome){
+                    setCheck(blockIde);
+                }
             }
 
             @Override

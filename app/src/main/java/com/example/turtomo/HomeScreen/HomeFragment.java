@@ -5,7 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.turtomo.HomeScreen.HomeFrag.Block;
 import com.example.turtomo.HomeScreen.HomeFrag.CustomAdapter;
+import com.example.turtomo.HomeScreen.RoomFrag.Room;
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +50,9 @@ public class HomeFragment extends Fragment {
     ArrayList<Block> blocks = new ArrayList<>();
     ListView listView;
 
+
+    NavController navController;
+
     private TextView helloMessage;
     private FirebaseAuth firebaseAuth;
 
@@ -71,6 +80,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
         listView = (ListView)view.findViewById(R.id.listViewBlock);
         helloMessage = view.findViewById(R.id.helloMessage);
 
@@ -98,7 +108,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void fillListView(){
-        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), blocks);
+        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), blocks, navController);
         listView.setAdapter(myCustomAdapter);
     }
 
@@ -115,6 +125,25 @@ public class HomeFragment extends Fragment {
                                 String blockId = blockSnapshot.child("blockId").getValue(String.class);
                                 String blockName = blockSnapshot.child("blockName").getValue(String.class);
                                 Block b = new Block(blockId, blockName);
+
+                    int roomFirstNumber = Integer.MAX_VALUE;
+                    int roomLastNumber = Integer.MIN_VALUE;
+
+
+                    for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
+                        if (roomSnapshot.getKey().startsWith("room")) {
+                            int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                            if (roomNumber < roomFirstNumber) {
+                                roomFirstNumber = roomNumber;
+                            }
+                            if (roomNumber > roomLastNumber) {
+                                roomLastNumber = roomNumber;
+                            }
+                        }
+                    }
+                    b.setPrimeiraSala(roomFirstNumber);
+                    b.setUltimaSala(roomLastNumber);
+
                                 blocks.add(b);
                 }
 

@@ -7,6 +7,8 @@ public class Block {
 
     private String blockId;
     private String blockName;
+    private int primeiraSala;
+    private int ultimaSala;
 
     public Block() {
     }
@@ -31,6 +33,23 @@ public class Block {
     public void setBlockName(String blockName) {
         this.blockName = blockName;
     }
+
+    public int getPrimeiraSala() {
+        return primeiraSala;
+    }
+
+    public void setPrimeiraSala(int primeiraSala) {
+        this.primeiraSala = primeiraSala;
+    }
+
+    public int getUltimaSala() {
+        return ultimaSala;
+    }
+
+    public void setUltimaSala(int ultimaSala) {
+        this.ultimaSala = ultimaSala;
+    }
+
     public void save(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("blocks").child(getBlockId()).setValue(this);
