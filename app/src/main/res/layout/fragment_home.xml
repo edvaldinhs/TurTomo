@@ -152,12 +152,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ListView
-        android:id="@+id/listViewBlock"
+    <GridView
+        android:id="@+id/gridViewBlock"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:divider="@null"
-        android:dividerHeight="10dp" />
+        android:dividerHeight="10dp"
+        android:numColumns="2"
+        />
 </LinearLayout>

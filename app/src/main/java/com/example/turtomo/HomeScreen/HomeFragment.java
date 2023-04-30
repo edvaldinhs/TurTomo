@@ -14,7 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.GridView;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
     }
 
     ArrayList<Block> blocks = new ArrayList<>();
-    ListView listView;
+    GridView gridView;
 
 
     NavController navController;
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
-        listView = (ListView)view.findViewById(R.id.listViewBlock);
+        gridView = (GridView) view.findViewById(R.id.gridViewBlock);
         helloMessage = view.findViewById(R.id.helloMessage);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -107,9 +108,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public void fillListView(){
+    public void fillGridView(){
         CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), blocks, navController);
-        listView.setAdapter(myCustomAdapter);
+        gridView.setAdapter(myCustomAdapter);
     }
 
     public void fillBlockValue(){
@@ -147,7 +148,7 @@ public class HomeFragment extends Fragment {
                                 blocks.add(b);
                 }
 
-                fillListView();
+                fillGridView();
             }
 
             @Override
