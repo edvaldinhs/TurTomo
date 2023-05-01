@@ -1,5 +1,6 @@
 package com.example.turtomo.HomeScreen;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -107,22 +108,28 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
         }
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_rooms, container, false);
+        View view;
         if(isFromPHome){
             view = inflater.inflate(R.layout.fragment_rooms_from_home, container, false);
-            Button goBackHome = view.findViewById(R.id.goBack);
+            try {
+                Button goBackHome = view.findViewById(R.id.goBack);
 
-            goBackHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
-                    if (navController != null) {
-                        navController.navigate(R.id.action_rooms_from_home_to_home);
-                    } else {
-                        Log.e("CustomAdapter", "NavController is null");
+                goBackHome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
+                        if (navController != null) {
+                            navController.navigate(R.id.action_rooms_from_home_to_home);
+                        } else {
+                            Log.e("CustomAdapter", "NavController is null");
+                        }
                     }
-                }
-            });
+                });
+            }catch(Exception e){
+
+            }
+        }else{
+            view = inflater.inflate(R.layout.fragment_rooms, container, false);
         }
 
 
