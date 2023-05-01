@@ -70,13 +70,12 @@ public class CustomAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString("blockId", blockId);
-                Log.d("Somethingaaa",blockId);
 
                 RoomsFragment fragment = new RoomsFragment();
                 fragment.setArguments(bundle);
 
                 if (navController != null) {
-                    navController.navigate(R.id.action_home_to_rooms, bundle);
+                    navController.navigate(R.id.action_home_to_rooms_from_home, bundle);
                 } else {
                     Log.e("CustomAdapter", "NavController is null");
                 }

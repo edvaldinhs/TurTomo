@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -96,17 +98,37 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_rooms, container, false);
-
-        listView = (ListView)view.findViewById(R.id.listView);
-
         extras = getArguments();
         boolean isFromPHome = false;
         if(extras!=null){
             searchByBlockId = extras.getString("blockId");
             isFromPHome = true;
+
+
         }
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_rooms, container, false);
+        if(isFromPHome){
+            view = inflater.inflate(R.layout.fragment_rooms_from_home, container, false);
+            Button goBackHome = view.findViewById(R.id.goBack);
+
+            goBackHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
+                    if (navController != null) {
+                        navController.navigate(R.id.action_rooms_from_home_to_home);
+                    } else {
+                        Log.e("CustomAdapter", "NavController is null");
+                    }
+                }
+            });
+        }
+
+
+        listView = (ListView)view.findViewById(R.id.listView);
+
+
 
         searchRecyclerView = view.findViewById(R.id.searchListView);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -139,7 +161,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
     public void setCheck(String blockId){
         if(!blockId.isEmpty() || !block_searchs.isEmpty()){
             for (BlockSearch b : block_searchs){
-                Log.d("IsSelected",b.getBlockName()+"  "+blockId);
                 if(b.getBlockId().toLowerCase().equals(blockId)){
                     b.setSelected(true);
                 }else {
