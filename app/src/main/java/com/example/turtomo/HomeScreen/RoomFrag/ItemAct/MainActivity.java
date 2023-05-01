@@ -113,8 +113,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 public void fillItemValue(String searchResults, int blockNumber){
-    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks")
-            .child("block" + blockNumber).child("room" + roomNumber).child("items");
+    DatabaseReference reference;
+        if(roomNumber<10 && roomNumber>=0){
+            reference = FirebaseDatabase.getInstance().getReference("blocks")
+                    .child("block" + blockNumber).child("room0" + roomNumber).child("items");
+        }else{
+            reference = FirebaseDatabase.getInstance().getReference("blocks")
+                    .child("block" + blockNumber).child("room" + roomNumber).child("items");
+        }
     Query query = reference.orderByChild("itemId");
 
     query.addListenerForSingleValueEvent(new ValueEventListener() {
