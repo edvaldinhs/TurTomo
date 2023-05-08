@@ -1,5 +1,6 @@
 package com.example.turtomo.HomeScreen.Connection;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,8 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.turtomo.HomeScreen.HomeScreen;
+import com.example.turtomo.HomeScreen.RoomFrag.CaptureAct;
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,12 +25,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class Connection extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText connectEditText;
     private Button confirmConnectBtn;
+    private Button qrConnectBtn;
+    private ImageView qrImageConnectBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,38 @@ public class Connection extends AppCompatActivity {
                 CheckEntityCode(connectEditText.getText().toString());
             }
         });
+        qrConnectBtn = findViewById(R.id.qrconnection_btn3);
+        qrImageConnectBtn = findViewById(R.id.qrImageView);
+
+        qrConnectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanCode();
+            }
+        });
+        qrImageConnectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanCode();
+            }
+        });
+
     }
+
+    private void scanCode(){
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume cima para ligar o flash");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        barLauncher.launch(options);
+    }
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->
+    {
+        if (result.getContents() != null) {
+            CheckEntityCode(result.getContents());
+        }
+    });
 
     public void CheckEntityCode(String codeInEditText){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -63,7 +101,6 @@ public class Connection extends AppCompatActivity {
                         for (DataSnapshot userSnapshot : refSnapshot.child("users").getChildren()) {
                             if (firebaseUser.getEmail().equals(userSnapshot.child("userEmail").getValue(String.class) + "")) {
                                 isAlreadyConnected = true;
-
                             }
                         }
                         if(!isAlreadyConnected && codeInEditText.equals(refSnapshot.child("idEntity").getValue(String.class).toUpperCase())){
