@@ -196,9 +196,8 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
                         if (searchByBlockId.isEmpty() ||
                                 blockSnapshot.child("blockId").getValue(String.class).toLowerCase().contains(searchByBlockId.toLowerCase())) {
                             for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-                                if (searchResults.isEmpty() ||
-                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-                                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
+                                Integer roomNumberS = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                                if (roomNumberS != null && (searchResults.isEmpty() || roomNumberS.toString().toLowerCase().contains(searchResults.toLowerCase()))) {
 
                                     //Verify the rooms by the searchBar
                                     if (roomSnapshot.getKey().startsWith("room")) {
