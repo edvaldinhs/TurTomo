@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
+import com.example.turtomo.HomeScreen.Connection.Entity;
 import com.example.turtomo.HomeScreen.RoomFrag.ItemAct.MainActivity;
 import com.example.turtomo.R;
 
@@ -15,12 +16,14 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends BaseAdapter {
 
-    Context mContext;
-    ArrayList<Room> rooms = new ArrayList<>();
+    private Context mContext;
+    private ArrayList<Room> rooms = new ArrayList<>();
+    private Entity entity = new Entity();
 
-    public CustomAdapter(Context context, ArrayList<Room> rooms){
+    public CustomAdapter(Context context, ArrayList<Room> rooms, Entity entity){
         mContext = context;
         this.rooms = rooms;
+        this.entity = entity;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class CustomAdapter extends BaseAdapter {
                 intent.putExtra("blockId", tempRoom.getBlockId());
                 intent.putExtra("id", tempRoom.getId());
                 intent.putExtra("roomNumber", tempRoom.getRoomNumber());
+                intent.putExtra("entityName", entity.getName());
                 mContext.startActivity(intent);
             }
         });

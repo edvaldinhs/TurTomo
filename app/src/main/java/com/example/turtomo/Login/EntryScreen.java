@@ -65,7 +65,6 @@ public class EntryScreen extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(EntryScreen.this, Login.class);
                     startActivity(intent);
-                    finish();
                 }
             });
 

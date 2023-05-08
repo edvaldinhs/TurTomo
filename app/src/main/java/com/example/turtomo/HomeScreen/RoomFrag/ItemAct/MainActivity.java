@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Bundle extras;
+    String entityName;
     int roomNumber;
     int blockNumber;
     private EditText searchEditText;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Item> items = new ArrayList<>();
     ListView listView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         extras = getIntent().getExtras();
         roomNumber = extras.getInt("roomNumber");
         blockNumber = Integer.parseInt(extras.getString("blockId"));
+        entityName = extras.getString("entityName");
 
         listView = (ListView)findViewById(R.id.listViewItem);
         reset = findViewById(R.id.reset);
@@ -112,50 +115,52 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myCustomAdapter);
     }
 
-public void fillItemValue(String searchResults, int blockNumber){
-    DatabaseReference reference;
-        if(roomNumber<10 && roomNumber>=0){
-            reference = FirebaseDatabase.getInstance().getReference("blocks")
-                    .child("block" + blockNumber).child("room0" + roomNumber).child("items");
-        }else{
-            reference = FirebaseDatabase.getInstance().getReference("blocks")
-                    .child("block" + blockNumber).child("room" + roomNumber).child("items");
-        }
-    Query query = reference.orderByChild("itemId");
-
-    query.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                if(searchResults.isEmpty()){
-                    String itemId = snapshot.child("itemId").getValue(String.class);
-                    String itemName = snapshot.child("itemName").getValue(String.class);
-                    boolean check = snapshot.child("check").getValue(boolean.class);
-                    Item item = new Item(itemId, itemName, check);
-                    items.add(item);
-                }else{
-                    if(snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())){
-                        String itemId = snapshot.child("itemId").getValue(String.class);
-                        String itemName = snapshot.child("itemName").getValue(String.class);
-                        boolean check = snapshot.child("check").getValue(boolean.class);
-                        Item item = new Item(itemId, itemName, check);
-                        items.add(item);
-                    }
-                }
+    public void fillItemValue(String searchResults, int blockNumber){
+        DatabaseReference reference;
+        if(!entityName.isEmpty()) {
+            if (roomNumber < 10 && roomNumber >= 0) {
+                reference = FirebaseDatabase.getInstance().getReference(entityName+"/blocks")
+                        .child("block" + blockNumber).child("room0" + roomNumber).child("items");
+            } else {
+                reference = FirebaseDatabase.getInstance().getReference(entityName+"/blocks")
+                        .child("block" + blockNumber).child("room" + roomNumber).child("items");
             }
-            fillListView();
-        }
+            Query query = reference.orderByChild("itemId");
 
-        public void search(){
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (searchResults.isEmpty()) {
+                            String itemId = snapshot.child("itemId").getValue(String.class);
+                            String itemName = snapshot.child("itemName").getValue(String.class);
+                            boolean check = snapshot.child("check").getValue(boolean.class);
+                            Item item = new Item(itemId, itemName, check);
+                            items.add(item);
+                        } else {
+                            if (snapshot.child("itemName").getValue(String.class).toLowerCase().contains(searchResults.toLowerCase())) {
+                                String itemId = snapshot.child("itemId").getValue(String.class);
+                                String itemName = snapshot.child("itemName").getValue(String.class);
+                                boolean check = snapshot.child("check").getValue(boolean.class);
+                                Item item = new Item(itemId, itemName, check);
+                                items.add(item);
+                            }
+                        }
+                    }
+                    fillListView();
+                }
 
-        }
+                public void search() {
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getApplicationContext(), "Item Database organizer Error", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
-    });
-}
+    }
 
 
     public void checkItemPresence(String tomo){

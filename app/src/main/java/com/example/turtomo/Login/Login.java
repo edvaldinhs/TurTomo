@@ -70,7 +70,6 @@ public class Login extends AppCompatActivity {
                     passwordLogin.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
                     passidk = false;
                 }else{
-                    System.out.println("asdasrKJAESUYDGASYGEASE");
                     passwordLogin.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     passidk = true;
                 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.turtomo.HomeScreen.Connection.Entity;
+import com.example.turtomo.HomeScreen.Connection.EntityViewModel;
 import com.example.turtomo.HomeScreen.RoomFrag.BlockSearch;
 import com.example.turtomo.HomeScreen.RoomFrag.CustomAdapter;
 import com.example.turtomo.HomeScreen.RoomFrag.ItemSpacingDecoration;
@@ -48,7 +51,10 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<BlockSearch> block_searchs = new ArrayList<>();
 
+    EntityViewModel entityViewModel;
+    Entity entity = new Entity();
     Bundle extras;
+
     ListView listView;
     RecyclerView searchRecyclerView;
     private EditText searchEditText;
@@ -76,8 +82,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
             fillRoomValue(searchResults, searchByBlockId);
         }
     }
-
-
     public static RoomsFragment newInstance(String param1, String param2) {
         RoomsFragment fragment = new RoomsFragment();
         Bundle args = new Bundle();
@@ -94,6 +98,8 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        entityViewModel = new ViewModelProvider(requireActivity()).get(EntityViewModel.class);
+        entity = entityViewModel.getEntity();
     }
 
     @Override
@@ -104,8 +110,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
         if(extras!=null){
             searchByBlockId = extras.getString("blockId");
             isFromPHome = true;
-
-
         }
         // Inflate the layout for this fragment
         View view;
@@ -126,7 +130,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
                     }
                 });
             }catch(Exception e){
-
             }
         }else{
             view = inflater.inflate(R.layout.fragment_rooms, container, false);
@@ -134,8 +137,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
 
 
         listView = (ListView)view.findViewById(R.id.listView);
-
-
 
         searchRecyclerView = view.findViewById(R.id.searchListView);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -152,7 +153,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
         fillBlockValue(isFromPHome, searchByBlockId);
         fillRoomValue(searchResults, searchByBlockId);
 
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,7 +161,6 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
                 fillRoomValue(searchResults, searchByBlockId);
             }
         });
-
 
         return view;
     }
@@ -179,88 +178,92 @@ public class RoomsFragment extends Fragment implements SearchBlockCustomAdapter.
     }
 
     public void fillListView(){
-        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), rooms);
+        CustomAdapter myCustomAdapter = new CustomAdapter(getActivity(), rooms, entity);
         listView.setAdapter(myCustomAdapter);
     }
 
     public void fillRoomValue(String searchResults, String searchByBlockId){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
-        Query query = reference.orderByChild("blockId");
+        if (entity.getName() != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference(entity.getName() + "/blocks");
+            Query query = reference.orderByChild("blockId");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
-                    String blockId = blockSnapshot.child("blockId").getValue().toString();
-                    if (searchByBlockId.isEmpty() ||
-                            blockSnapshot.child("blockId").getValue(String.class).toLowerCase().contains(searchByBlockId.toLowerCase())) {
-                    for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-                        if (searchResults.isEmpty() ||
-                                roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
-                                || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
-
-                            //Verify the rooms by the searchBar
-                            if (roomSnapshot.getKey().startsWith("room")) {
-
-
+                    for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                        String blockId = blockSnapshot.child("blockId").getValue().toString();
+                        if (searchByBlockId.isEmpty() ||
+                                blockSnapshot.child("blockId").getValue(String.class).toLowerCase().contains(searchByBlockId.toLowerCase())) {
+                            for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
                                 if (searchResults.isEmpty() ||
-                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().
-                                                toLowerCase().contains(searchResults.toLowerCase())) {
+                                        roomSnapshot.child("roomNumber").getValue(Integer.class).toString().toLowerCase().contains(searchResults.toLowerCase())
+                                        || "Sala".toLowerCase().contains(searchResults.toLowerCase())) {
 
-                                    String id = roomSnapshot.child("roomId").getValue(String.class);
-                                    int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
-                                    Room r = new Room(id, roomNumber, blockId);
-                                    rooms.add(r);
+                                    //Verify the rooms by the searchBar
+                                    if (roomSnapshot.getKey().startsWith("room")) {
 
+
+                                        if (searchResults.isEmpty() ||
+                                                roomSnapshot.child("roomNumber").getValue(Integer.class).toString().
+                                                        toLowerCase().contains(searchResults.toLowerCase())) {
+
+                                            String id = roomSnapshot.child("roomId").getValue(String.class);
+                                            int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                                            Room r = new Room(id, roomNumber, blockId);
+                                            rooms.add(r);
+
+                                        }
+                                    }
                                 }
                             }
+
                         }
                     }
-
-                    }
+                    fillListView();
                 }
-                fillListView();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
     private void fillSearchListView(){
         SearchBlockCustomAdapter mySearchCustomAdapter = new SearchBlockCustomAdapter(getActivity(), block_searchs, this);
         searchRecyclerView.setAdapter(mySearchCustomAdapter);
     }
 
-    public void fillBlockValue(boolean isFromPHome, String blockIde){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
-        Query query = reference.orderByChild("blockId");
+    public void fillBlockValue(boolean isFromPHome, String blockIde) {
+        if (entity.getName() != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference(entity.getName() + "/blocks");
+            Query query = reference.orderByChild("blockId");
 
-        block_searchs.add(new BlockSearch("","All", true));
+            block_searchs.add(new BlockSearch("", "All", true));
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
-                    String blockId = blockSnapshot.child("blockId").getValue().toString();
-                    String blockName = blockSnapshot.child("blockName").getValue(String.class);
-                    BlockSearch b = new BlockSearch(blockId, blockName, false);
-                    block_searchs.add(b);
+                    for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                        String blockId = blockSnapshot.child("blockId").getValue().toString();
+                        String blockName = blockSnapshot.child("blockName").getValue(String.class);
+                        BlockSearch b = new BlockSearch(blockId, blockName, false);
+                        block_searchs.add(b);
+                    }
+
+                    fillSearchListView();
+                    if (isFromPHome) {
+                        setCheck(blockIde);
+                    }
                 }
 
-                fillSearchListView();
-                if(isFromPHome){
-                    setCheck(blockIde);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Room Database organizer Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
     }
 }

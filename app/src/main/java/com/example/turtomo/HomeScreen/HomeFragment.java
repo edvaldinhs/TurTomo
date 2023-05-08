@@ -5,23 +5,21 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.turtomo.HomeScreen.Connection.Entity;
+import com.example.turtomo.HomeScreen.Connection.EntityViewModel;
 import com.example.turtomo.HomeScreen.HomeFrag.Block;
 import com.example.turtomo.HomeScreen.HomeFrag.CustomAdapter;
-import com.example.turtomo.HomeScreen.RoomFrag.Room;
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,7 +48,8 @@ public class HomeFragment extends Fragment {
 
     ArrayList<Block> blocks = new ArrayList<>();
     GridView gridView;
-
+    EntityViewModel entityViewModel;
+    String entityName;
 
     NavController navController;
 
@@ -80,13 +79,20 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         navController = Navigation.findNavController(requireActivity(), R.id.frame_layout);
         gridView = (GridView) view.findViewById(R.id.gridViewBlock);
         helloMessage = view.findViewById(R.id.helloMessage);
 
+        entityViewModel = new ViewModelProvider(requireActivity()).get(EntityViewModel.class);
+        Entity entity = entityViewModel.getEntity();
+        if(entity.getName() != null){
+            entityName = entity.getName();
+        }
+
+
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
+
 
         fillBlockValue();
 
@@ -113,48 +119,50 @@ public class HomeFragment extends Fragment {
         gridView.setAdapter(myCustomAdapter);
     }
 
-    public void fillBlockValue(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("blocks");
-        Query query = reference.orderByChild("blockId");
+    public void fillBlockValue() {
+        if (entityName != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference(entityName + "/blocks");
+            Query query = reference.orderByChild("blockId");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                blocks.clear();
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    blocks.clear();
 
-                for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
-                                String blockId = blockSnapshot.child("blockId").getValue(String.class);
-                                String blockName = blockSnapshot.child("blockName").getValue(String.class);
-                                Block b = new Block(blockId, blockName);
+                    for (DataSnapshot blockSnapshot : dataSnapshot.getChildren()) {
+                        String blockId = blockSnapshot.child("blockId").getValue(String.class);
+                        String blockName = blockSnapshot.child("blockName").getValue(String.class);
+                        Block b = new Block(blockId, blockName);
 
-                    int roomFirstNumber = Integer.MAX_VALUE;
-                    int roomLastNumber = Integer.MIN_VALUE;
+                        int roomFirstNumber = Integer.MAX_VALUE;
+                        int roomLastNumber = Integer.MIN_VALUE;
 
 
-                    for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
-                        if (roomSnapshot.getKey().startsWith("room")) {
-                            int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
-                            if (roomNumber < roomFirstNumber) {
-                                roomFirstNumber = roomNumber;
-                            }
-                            if (roomNumber > roomLastNumber) {
-                                roomLastNumber = roomNumber;
+                        for (DataSnapshot roomSnapshot : blockSnapshot.getChildren()) {
+                            if (roomSnapshot.getKey().startsWith("room")) {
+                                int roomNumber = roomSnapshot.child("roomNumber").getValue(Integer.class);
+                                if (roomNumber < roomFirstNumber) {
+                                    roomFirstNumber = roomNumber;
+                                }
+                                if (roomNumber > roomLastNumber) {
+                                    roomLastNumber = roomNumber;
+                                }
                             }
                         }
-                    }
-                    b.setPrimeiraSala(roomFirstNumber);
-                    b.setUltimaSala(roomLastNumber);
+                        b.setPrimeiraSala(roomFirstNumber);
+                        b.setUltimaSala(roomLastNumber);
 
-                                blocks.add(b);
+                        blocks.add(b);
+                    }
+
+                    fillGridView();
                 }
 
-                fillGridView();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Block Database organizer Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Block Database organizer Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

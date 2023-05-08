@@ -15,6 +15,9 @@
         android:theme="@style/Theme.TurTomo"
         tools:targetApi="31">
         <activity
+            android:name=".HomeScreen.Connection.Connection"
+            android:exported="false" />
+        <activity
             android:name=".HomeScreen.RoomFrag.Room"
             android:exported="false" />
         <activity

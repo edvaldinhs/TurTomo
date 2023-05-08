@@ -1,11 +1,7 @@
-package com.example.turtomo.HomeScreen;
+package com.example.turtomo.HomeScreen.Connection;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,12 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
-import com.example.turtomo.HomeScreen.Connection.Entity;
-import com.example.turtomo.HomeScreen.Connection.EntityViewModel;
+import com.example.turtomo.HomeScreen.HomeScreen;
 import com.example.turtomo.Login.EntryScreen;
 import com.example.turtomo.R;
-import com.example.turtomo.databinding.ActivityHomeScreenBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,49 +23,34 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+public class Connection extends AppCompatActivity {
 
-public class HomeScreen extends AppCompatActivity {
-
-    private ActivityHomeScreenBinding binding;
-    private NavHostFragment navHostFragment;
-    private NavController navController;
     private FirebaseAuth firebaseAuth;
-    private Entity entity = new Entity();
-    private EntityViewModel entityViewModel;
-    private Bundle bundle = new Bundle();
+    private EditText connectEditText;
+    private Button confirmConnectBtn;
 
-
-    Button btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState) ;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_connection);
         getSupportActionBar().hide();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        entityViewModel = new ViewModelProvider(this).get(EntityViewModel.class);
-        entityViewModel.setEntity(entity);
 
-        binding = ActivityHomeScreenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+        connectEditText = findViewById(R.id.connectEditText);
         firebaseAuth = FirebaseAuth.getInstance();
-        checkEntity();
-        checkUser();
 
-
+        confirmConnectBtn = findViewById(R.id.bt_connect);
+        confirmConnectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckEntityCode(connectEditText.getText().toString());
+            }
+        });
     }
 
-    private void checkUser() {
-        //verifica se está realmente logado
+    public void CheckEntityCode(String codeInEditText){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
-            startActivity(new Intent(this, EntryScreen.class));
-            finish();
-        }
-    }
-
-    private void checkEntity() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null) {
+        if (firebaseUser != null && !codeInEditText.isEmpty()) {
 
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             Query query = reference.orderByChild("users");
@@ -79,15 +59,23 @@ public class HomeScreen extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot refSnapshot : snapshot.getChildren()) {
+                        boolean isAlreadyConnected = false;
                         for (DataSnapshot userSnapshot : refSnapshot.child("users").getChildren()) {
                             if (firebaseUser.getEmail().equals(userSnapshot.child("userEmail").getValue(String.class) + "")) {
-                                entity.setName(refSnapshot.getKey());
-                                entity.setEntityID(refSnapshot.child("idEntity").getValue(String.class));
-                                bundle.putString("enameb", refSnapshot.getKey());
+                                isAlreadyConnected = true;
+
                             }
                         }
+                        if(!isAlreadyConnected && codeInEditText.equals(refSnapshot.child("idEntity").getValue(String.class).toUpperCase())){
+                            String userKey = refSnapshot.child("users").getRef().push().getKey();
+                            refSnapshot.child("users").getRef().child(userKey+"/userEmail").setValue(firebaseUser.getEmail());
+                            refSnapshot.child("users").getRef().child(userKey+"/userName").setValue(firebaseUser.getDisplayName());
+                            Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(i);
+                            finish();
+                        }
                     }
-                    initNavigation();
                 }
 
                 @Override
@@ -103,13 +91,5 @@ public class HomeScreen extends AppCompatActivity {
                 finish();
             }
         }
-    }
-
-    private void initNavigation(){
-        navHostFragment
-                = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-        navController = navHostFragment.getNavController();
-        navController.setGraph(R.navigation.nav_main, bundle);
-        NavigationUI.setupWithNavController(binding.bottomNavView, navController);
     }
 }
